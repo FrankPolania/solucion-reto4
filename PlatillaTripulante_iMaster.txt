@@ -1,0 +1,316 @@
+/*
+ * Pueda usar esta plantilla para la carga del reto a iMaster
+ * Copie las clases de los paquetes Modelo, Vista, Controlador y Util
+ * No incluya los import de los archivos .java solo las clases
+ */
+// Importaciones necesarias en iMaster
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.sql.PreparedStatement;
+
+// Util (No modificar)
+class JDBCUtilities {
+    private static final String DATABASE_LOCATION = "ProyectosConstruccion.db";
+
+    public static Connection getConnection() throws SQLException {
+        String url = "jdbc:sqlite:"+DATABASE_LOCATION;
+
+        return DriverManager.getConnection(url);
+    }
+}
+
+// Remplace en adelante por las clases de sus archivos .java
+
+// Vista class VistaRequerimientos {}
+public class VistaRequerimientosReto4 {
+    
+    public static final ControladorRequerimientosReto4 controlador = new ControladorRequerimientosReto4();
+
+    //// ****************REQUERIMIENTO 1 LIDERES POR SALARIO ******************
+    public static void requerimiento1(){ //lider por salario
+    System.out.println("*** Lideres por Salario ***");
+        try{
+        ArrayList<LiderPorSalario> RankingLideresPorSalario = controlador.consultarLideresPorSalario();
+        for(LiderPorSalario liderporsalario : RankingLideresPorSalario){
+            System.out.printf("El Lider %s %s con Id %d tiene un salario de  %d %n",
+            liderporsalario.getNombre(),
+            liderporsalario.getApellido(),
+            liderporsalario.getIdLider(),
+            liderporsalario.getSalario()
+            );
+
+        }
+
+        }catch(SQLException e){
+            System.err.println("Ha ocurrido un error!"+e.getMessage());
+        }
+    }
+
+    public static void requerimiento2(){   // Proyectos  por tipo  
+        System.out.println("*** Proyectos por Tipo ***");
+        try{
+            ArrayList<ProyectosPorTipo> RankingProyectosPorTipo = controlador.consultarProyectosPorTipos();
+            for(ProyectosPorTipo proyectosportipo : RankingProyectosPorTipo){
+                System.out.printf("El proyecto con ID %d de la constructora: %s de la ciudad  %s, tiene un estrato asignado igual a %d %n",
+                proyectosportipo.getIdProyecto(),
+                proyectosportipo.getConstructora(),
+                proyectosportipo.getciudad(),
+                proyectosportipo.getEstrato()
+            );
+
+        }
+
+        }catch(SQLException e){
+            System.err.println(e);
+        }
+    }
+
+    public static void requerimiento3(){ // Lider por nombre
+
+        System.out.println("*** Lideres por Nombre ***");
+        try{
+            ArrayList<LiderPorNombre> RankingLiderPorNombres = controlador.consultarLideresPorNombres();
+            for(LiderPorNombre liderespornombre : RankingLiderPorNombres){
+                System.out.printf("El Lider con ID %d se llama: %s  %s %n",
+                liderespornombre.getIdLider(),
+                liderespornombre.getNombre(),
+                liderespornombre.getApellido()
+                
+            );
+
+        }
+        }catch(SQLException e){
+            System.err.println(e);
+        }
+    }
+
+}
+
+// Controlador class ControladorRequerimientos {}
+public class ControladorRequerimientosReto4 {       
+    //Su codigo
+    
+    public ControladorRequerimientosReto4(){
+        //Su codigo
+
+    }
+
+    public ArrayList<LiderPorSalario> consultarLideresPorSalario() throws SQLException {
+        LiderPorSalarioDao respuesta = new LiderPorSalarioDao();
+        return respuesta.rankingLiderPorSalario();
+    } 
+    
+    public ArrayList<ProyectosPorTipo> consultarProyectosPorTipos() throws SQLException {
+       ProyectoPorTipoDao respuesta = new ProyectoPorTipoDao();
+        return respuesta.rankingProyectosPorTipo();
+    }
+
+    public ArrayList<LiderPorNombre> consultarLideresPorNombres() throws SQLException {
+        LiderPorNombreDao respuesta = new LiderPorNombreDao();
+        return respuesta.rankingLiderPorNombre();
+    }
+
+}
+
+// Modelo
+// VO class Requerimiento_1 {}
+public class LiderPorSalario {
+    //Su codigo
+    private String Nombre;
+    private String Apellido;
+    private int IdLider;
+    private int Salario;
+
+    public LiderPorSalario(){}
+    
+    public LiderPorSalario(String Nombre,String Apellido, int IdLider,int Salario){
+        this.Nombre = Nombre;
+        this.Apellido = Apellido;
+        this.IdLider = IdLider;
+        this.Salario = Salario;
+    }
+
+/// setters
+    public void SetNombre(String Nombre){this.Nombre = Nombre;}
+    public void setApellido(String Apellido){this.Apellido = Apellido;}
+    public void setIdLider(int IdLider){this.IdLider = IdLider;}
+    public void setSalario(int Salario){this.Salario = Salario;}
+
+/// Getters
+    public String getNombre(){return this.Nombre;}
+    public String getApellido(){return this.Apellido;}
+    public int getIdLider(){return this.IdLider;}
+    public int getSalario(){return this.Salario;}
+
+    
+}
+
+//class Requerimiento_2 {}
+public class ProyectosPorTipo {
+    private int idProyecto;
+    private String constructora;
+    private String ciudad;
+    private int estrato;
+    
+    public ProyectosPorTipo(){}
+    public ProyectosPorTipo(int idProyecto,String constructora,String ciudad,int estrato){
+        this.idProyecto=idProyecto;
+        this.constructora=constructora;
+        this.ciudad=ciudad;
+        this.estrato=estrato;
+    }
+
+
+    /// setters
+    public void SetIdProyecto(int idProyecto){this.idProyecto = idProyecto;}
+    public void SetCostructora(String constructora){this.constructora = constructora;}
+    public void SetCiudad(String ciudad){this.ciudad = ciudad;}
+    public void SetEstrato(int estrato){this.estrato = estrato;}
+
+
+/// Getters
+public int getIdProyecto(){return this.idProyecto;}
+public String getConstructora(){return this.constructora;}
+public String getciudad(){return this.ciudad;}
+public int  getEstrato(){return this.estrato;}
+}
+
+//class Requerimiento_3 {}
+public class LiderPorNombre {
+private int idLider;
+private String Nombre;
+private String Apellido;
+
+public LiderPorNombre(){}
+public LiderPorNombre(int idLider,String Nombre,String Apellido){
+    this.idLider=idLider;
+    this.Nombre = Nombre;
+    this.Apellido = Apellido;
+}
+
+public void setIdLider(int idLider){this.idLider=idLider;}
+public void setNombre(String  Nombre){this.Nombre= Nombre;}
+public void setApellido(String Apellido){this.Apellido= Apellido;}
+
+public int getIdLider(){return this.idLider;}
+public String getNombre(){return this.Nombre;}
+public String getApellido(){return this.Apellido;}
+    
+}
+
+// DAO
+//class Requerimiento_1Dao {}
+public class LiderPorSalarioDao {
+    
+    public ArrayList<LiderPorSalario> rankingLiderPorSalario() throws SQLException {
+        ArrayList<LiderPorSalario> respuesta = new ArrayList<LiderPorSalario>();
+        Connection conexion = JDBCUtilities.getConnection();
+
+        try{
+                String Consulta = "SELECT Id_Lider, Nombre,Primer_Apellido, salario FROM Lider WHERE salario <= 500000 ORDER BY salario";
+
+                PreparedStatement statement = conexion.prepareStatement(Consulta);
+                ResultSet resultSet = statement.executeQuery();
+
+                while(resultSet.next()){
+                    LiderPorSalario liderPorSalario= new LiderPorSalario();
+                    liderPorSalario.SetNombre(resultSet.getString("Nombre"));
+                    liderPorSalario.setApellido(resultSet.getString("Primer_apellido"));
+                    liderPorSalario.setIdLider(resultSet.getInt("Id_Lider"));
+                    liderPorSalario.setSalario(resultSet.getInt("Salario"));
+                    respuesta.add(liderPorSalario);
+                }
+                resultSet.close();
+                statement.close();
+
+        }catch(SQLException e){
+            System.err.println("error consultando los lideres por salario:" + e);
+        }finally{
+            
+        }
+
+       
+
+        return respuesta;
+        // Su código
+    }
+    
+}
+
+//class Requerimiento_2Dao {}
+public class ProyectoPorTipoDao { ////////////////////////////////// ************************
+    
+    public ArrayList<ProyectosPorTipo> rankingProyectosPorTipo() throws SQLException {
+        ArrayList<ProyectosPorTipo> respuesta = new ArrayList<ProyectosPorTipo>();
+        Connection conexion = JDBCUtilities.getConnection();
+
+        try{
+                String Consulta = "select p.ID_Proyecto, p.Constructora, p.Ciudad, t.Estrato as Estrato  from Proyecto p  join Tipo t on p.ID_Tipo = t.ID_Tipo where p.ciudad='Cartagena' ORDER BY Estrato";
+
+                PreparedStatement statement = conexion.prepareStatement(Consulta);
+                ResultSet resultSet = statement.executeQuery();
+
+                while(resultSet.next()){
+                    ProyectosPorTipo proyectosPorTipo= new ProyectosPorTipo();
+                    proyectosPorTipo.SetIdProyecto(resultSet.getInt("ID_proyecto"));
+                    proyectosPorTipo.SetCostructora(resultSet.getString("Constructora"));
+                    proyectosPorTipo.SetCiudad(resultSet.getString("Ciudad"));
+                    proyectosPorTipo.SetEstrato(resultSet.getInt("estrato"));
+                    respuesta.add(proyectosPorTipo);
+                }
+                resultSet.close();
+                statement.close();
+
+        }catch(SQLException e){
+            System.err.println("error consultando los lideres por salario:" + e);
+        }finally{
+            
+        }
+
+       
+
+        return respuesta;
+        // Su código
+    }
+        
+}
+
+//class Requerimiento_3Dao {}
+public class LiderPorNombreDao {
+   
+    public ArrayList<LiderPorNombre> rankingLiderPorNombre() throws SQLException {
+        ArrayList<LiderPorNombre> respuesta = new ArrayList<LiderPorNombre>();
+        Connection conexion = JDBCUtilities.getConnection();
+
+        try{
+                String Consulta = "select ID_lider,Nombre,Primer_Apellido from Lider l where l.Primer_Apellido like('%z') order by Nombre ASC ";
+
+                PreparedStatement statement = conexion.prepareStatement(Consulta);
+                ResultSet resultSet = statement.executeQuery();
+
+                while(resultSet.next()){
+                    LiderPorNombre liderPorNombre= new LiderPorNombre();
+                    liderPorNombre.setIdLider(resultSet.getInt("ID_Lider"));
+                    liderPorNombre.setNombre(resultSet.getString("Nombre"));
+                    liderPorNombre.setApellido(resultSet.getString("Primer_Apellido"));
+                    respuesta.add(liderPorNombre);
+                }
+                resultSet.close();
+                statement.close();
+
+        }catch(SQLException e){
+            System.err.println("error consultando los lideres por salario:" + e);
+        }finally{
+            
+        }
+
+       
+
+        return respuesta;
+        // Su código
+    }
+}
